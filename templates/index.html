@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 2px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-indigo-600">TechStore</a>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold">Home</a>
+                <a href="#" class="text-gray-600 hover:text-indigo-600 font-semibold">Shop</a>
+                <div class="relative">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 hover:text-indigo-600 cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="bg-indigo-600 text-white py-20 text-center">
+        <h1 class="text-5xl font-extrabold mb-4">Welcome to TechStore</h1>
+        <p class="text-xl mb-8">Discover the latest and greatest in tech gear.</p>
+        <a href="#products" class="bg-white text-indigo-600 font-bold py-3 px-6 rounded-full hover:bg-gray-200 transition duration-300">Shop Now</a>
+    </header>
+
+    <!-- Products Section -->
+    <main id="products" class="container mx-auto py-16 px-4">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Featured Products</h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+            {% for product in products %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl flex flex-col h-full">
+                <img src="{{ product.image }}" alt="{{ product.name }}" class="w-full h-48 object-cover">
+                <div class="p-4 flex flex-col flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2 line-clamp-2 h-14">{{ product.name }}</h3>
+                    <p class="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">{{ product.description }}</p>
+                    <div class="mt-auto">
+                        <span class="text-xl font-bold text-indigo-600 mb-4 block">${{ product.price }}</span>
+                        <button onclick="addToCart('{{ product.name }}')" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded hover:bg-indigo-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 text-center mt-12">
+        <p>&copy; 2024 TechStore. All rights reserved.</p>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Item added to cart!</div>
+
+    <script>
+        let cartCount = 0;
+
+        function addToCart(productName) {
+            // Update cart count
+            cartCount++;
+            document.getElementById('cart-count').innerText = cartCount;
+
+            // Show toast
+            const toast = document.getElementById("toast");
+            toast.innerText = `${productName} added to cart!`;
+            toast.className = "toast show";
+
+            // Hide toast after 3 seconds
+            setTimeout(function(){
+                toast.className = toast.className.replace("toast show", "toast");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
